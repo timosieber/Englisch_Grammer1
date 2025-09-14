@@ -32,13 +32,13 @@
   <div class="app">
     <section class="card" id="startScreen">
       <h1>English Grammar Trainer - Complete</h1>
-      <p style="text-align:center">Alle wichtigen englischen Zeitformen mit 120 Aufgaben. WÃ¤hle Modus und Kategorien.</p>
+      <p style="text-align:center">Alle wichtigen englischen Zeitformen mit 120 Aufgaben. Wähle Modus und Kategorien.</p>
 
-      <h3>Modus auswÃ¤hlen</h3>
+      <h3>Modus auswählen</h3>
       <div class="chips" id="modeChips"></div>
-      <p style="font-size:12px;text-align:center">Learn = mit ErklÃ¤rungen Â· Practice = schneller Â· Test = Ergebnis am Schluss Â· Blind = ohne Hinweise Â· Write = selbst schreiben</p>
+      <p style="font-size:12px;text-align:center">Learn = mit Erklärungen • Practice = schneller • Test = Ergebnis am Schluss • Blind = ohne Hinweise • Write = selbst schreiben</p>
 
-      <h3>Kategorien auswÃ¤hlen</h3>
+      <h3>Kategorien auswählen</h3>
       <div class="chips" id="tenseChips"></div>
 
       <div class="row">
@@ -51,7 +51,7 @@
       <h2 id="qText"></h2>
       <div id="choices"></div>
       <div id="explain"></div>
-      <div class="row"><button id="checkBtn" class="hidden">PrÃ¼fen</button><button id="nextBtn">Weiter</button></div>
+      <div class="row"><button id="checkBtn" class="hidden">Prüfen</button><button id="nextBtn">Weiter</button></div>
     </section>
 
     <section class="card hidden" id="result">
@@ -317,7 +317,7 @@
     const q=state.pool[state.idx]; state.current=q;
     $('#qText').textContent=sanitizeParenHints(q.q); const box=$('#choices'); box.innerHTML='';
     if(state.mode==='write'){
-      const input=document.createElement('input'); input.type='text'; input.id='writeInput'; input.placeholder='Antwort hier eingeben (groÃŸ/klein zÃ¤hlt)';
+      const input=document.createElement('input'); input.type='text'; input.id='writeInput'; input.placeholder='Antwort hier eingeben (groß/klein zählt)';
       input.addEventListener('keydown',(e)=>{
         if(e.key==='Enter'){
           if($('#checkBtn').classList.contains('hidden')){
@@ -361,7 +361,7 @@
 
   // Controls
   $('#startBtn').addEventListener('click',()=>{
-    if(state.selectedTenses.size===0){ alert('Bitte wÃ¤hle mindestens eine Kategorie'); return; }
+    if(state.selectedTenses.size===0){ alert('Bitte wähle mindestens eine Kategorie'); return; }
     $('#startScreen').classList.add('hidden'); $('#quiz').classList.remove('hidden'); buildPool(); nextQuestion();
   });
 
