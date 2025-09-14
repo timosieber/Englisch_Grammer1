@@ -37,7 +37,8 @@
       .choice{padding:16px;font-size:16px}
       .chips{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding-bottom:6px;-webkit-overflow-scrolling:touch}
       .chip{display:inline-block;white-space:nowrap}
-      .app{padding:12px 12px calc(80px + env(safe-area-inset-bottom,0px))}
+      .app{padding:12px 12px calc(160px + env(safe-area-inset-bottom,0px))}
+      #quiz .row.controls{position:fixed;left:0;right:0;bottom:0;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;justify-content:center;background:rgba(15,23,42,.92);backdrop-filter:blur(8px);border-top:1px solid rgba(255,255,255,.12);z-index:50}
     }
     /* Explanation panel */
     .explain-panel{margin-top:12px;text-align:left;border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:12px;background:rgba(255,255,255,.06)}
@@ -75,7 +76,7 @@
       <h2 id="qText"></h2>
       <div id="choices"></div>
       <div id="explain"></div>
-      <div class="row"><button id="checkBtn" class="hidden">Prüfen</button><button id="nextBtn">Weiter</button></div>
+      <div class="row controls"><button id="checkBtn" class="hidden">Prüfen</button><button id="nextBtn">Weiter</button></div>
     </section>
 
     <section class="card hidden" id="result">
@@ -496,7 +497,7 @@
       };
       if(IRR[t]) return IRR[t];
       // drop adverbs/particles and pronouns/determiners
-      const DROP=new Set(['not','to','just','already','yet','still','usually','often','always','sometimes','never',
+      const DROP=new Set(['not','to','just','already','yet','still','often','always','sometimes','never',
         'he','she','it','we','you','they','i','me','him','her','us','them','one','ones',
         'this','that','these','those','there','here','who','whom','whose','which','what','where','when','why','how']);
       if(DROP.has(t)) return '';
@@ -722,6 +723,7 @@
   </script>
 </body>
 </html>
+
 
 
 
