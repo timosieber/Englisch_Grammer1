@@ -255,7 +255,7 @@
     {id:'blind',label:'Blind'},
     {id:'write',label:'Write'}
   ];
-  function sanitizeParenHints(str){
+  function sanitizeParenHints(str, tenses, blanksCount){
     const allowedAdverbs = [
       'usually','always','often','sometimes','never','rarely','seldom','hardly ever'
     ];
@@ -277,6 +277,9 @@
       return t.trim();
     };
 
+    const tset = new Set(Array.isArray(tenses)?tenses:[]);
+    const isPerfect = ['presentPerf','presentPerfCont','pastPerf','pastPerfCont'].some(k=>tset.has(k));
+    const needAuxHave = isPerfect && (blanksCount||0) >= 2;
     return str.replace(/\(([^)]*)\)/g,(m,inner)=>{
       // split multi-gap hints: watch/ring
       const tokens = inner.split('/').map(t=>t.trim()).filter(Boolean);
@@ -301,6 +304,10 @@
         }
         cleaned.push(additions.length ? (base + ' + ' + additions.join(' + ')) : base);
       });
+      // If it's a perfect tense with 2 blanks and only one token present, prepend base auxiliary 'have'
+      if (needAuxHave && cleaned.length===1 && cleaned[0].toLowerCase()!=='have'){
+        cleaned.unshift('have');
+      }
       if (cleaned.length===0) return '';
       return '(' + cleaned.join('/') + ')';
     });
@@ -353,7 +360,7 @@
 
   function nextQuestion(){if(state.idx>=state.pool.length){return showResult();}
     const q=state.pool[state.idx]; state.current=q;
-    $('#qText').textContent=sanitizeParenHints(q.q); const box=$('#choices'); box.innerHTML='';
+    #qText.textContent=sanitizeParenHints(q.q, q.tenses, (q.q.match(/_{2,}/g)||[]).length); const box=$('#choices'); box.innerHTML='';
     if(state.mode==='write'){
       const input=document.createElement('input'); input.type='text'; input.id='writeInput'; input.placeholder='Antwort hier eingeben (groß/klein zählt)';
       input.addEventListener('keydown',(e)=>{
@@ -427,4 +434,5 @@
   </script>
 </body>
 </html>
+
 
