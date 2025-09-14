@@ -330,6 +330,7 @@
     const parts=fixed.split('|').map(s=>s.trim()).filter(Boolean);
     let items=parts.map(s=>{
       let type='';
+      if(/^S\\s*/.test(s)) { type='good'; s=s.replace(/^S\\s*[-:]?\\s*/,''); }
       if(/^([✓✔V]\s*|(?:correct)\b)/i.test(s)) type='good';
       if(/^([✗✕xX\?]\s*|(?:falsch)\b)/i.test(s)) type= type || 'bad';
       s=s.replace(/^([✓✔✗✕V\?]+)\s*[-:]?\s*/,'');
@@ -423,6 +424,10 @@
   </script>
 </body>
 </html>
+
+
+
+
 
 
 
