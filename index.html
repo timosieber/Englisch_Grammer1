@@ -255,7 +255,59 @@
     {id:'blind',label:'Blind'},
     {id:'write',label:'Write'}
   ];
-  function sanitizeParenHints(str, tenses, blanksCount){
+  function sanitizeParenHints(str, tenses, blanksCount, answer){
+    function lemmaToken(tok){
+      if(!tok) return '';
+      let t=tok.toLowerCase().replace(/[^a-z']/g,'');
+      const CONTRA={
+        "won't":"will","can't":"can","shan't":"shall","wouldn't":"would","shouldn't":"should","couldn't":"could","didn't":"did","doesn't":"does","don't":"do","isn't":"is","aren't":"are","wasn't":"was","weren't":"were","hasn't":"has","haven't":"have","hadn't":"had"
+      };
+      if(CONTRA[t]) t=CONTRA[t];
+      const IRR={
+        'am':'be','is':'be','are':'be','was':'be','were':'be','been':'be','being':'be',
+        'has':'have','had':'have',
+        'did':'do','does':'do',
+        'went':'go','gone':'go',
+        'met':'meet','made':'make','gave':'give','given':'give','took':'take','taken':'take',
+        'saw':'see','seen':'see','wrote':'write','written':'write','spoke':'speak','spoken':'speak',
+        'ate':'eat','eaten':'eat','drank':'drink','drunk':'drink','bought':'buy','brought':'bring',
+        'slept':'sleep','kept':'keep','left':'leave','felt':'feel','found':'find','heard':'hear',
+        'taught':'teach','caught':'catch','sat':'sit','sat':'sit','ran':'run','came':'come','become':'become','became':'become',
+        'lost':'lose','paid':'pay','spent':'spend','threw':'throw','thrown':'throw','put':'put','cut':'cut','let':'let','read':'read'
+      };
+      if(IRR[t]) return IRR[t];
+      // drop adverbs/particles
+      const DROP=new Set(['not','to','just','already','yet','still','usually','often','always','sometimes','never']);
+      if(DROP.has(t)) return '';
+      // modals stay as-is
+      const MODALS=new Set(['will','would','can','could','may','might','must','shall','should']);
+      if(MODALS.has(t)) return t;
+      // strip common suffixes
+      if(/ing$/.test(t)){
+        if(/ying$/.test(t)) return t.replace(/ying$/,'y');
+        return t.replace(/ing$/,'');
+      }
+      if(/ied$/.test(t)) return t.replace(/ied$/,'y');
+      if(/ed$/.test(t)) return t.replace(/ed$/,'');
+      if(/es$/.test(t)) return t.replace(/es$/,'');
+      if(/s$/.test(t) && t!=='is') return t.replace(/s$/,'');
+      return t;
+    }
+    function deriveFromAnswer(ans){
+      if(!ans) return [];
+      const perBlank=ans.split('/').map(s=>s.trim());
+      const out=[];
+      perBlank.forEach(part=>{
+        part.split(/\s+/).forEach(tok=>{
+          const le=lemmaToken(tok);
+          if(le) out.push(le);
+        });
+      });
+      // de-duplicate consecutive duplicates, keep order
+      const final=[]; const seen=new Set();
+      out.forEach(v=>{ const key=v; if(!seen.has(key)){ final.push(v); seen.add(key);} });
+      return final;
+    }
     const stripGrammar = (s) => {
       let t = (s||'').replace(/\s+/g,' ').trim();
       // remove leading markers
@@ -273,6 +325,15 @@
     const tset = new Set(Array.isArray(tenses)?tenses:[]);
     const isPerfect = ['presentPerf','presentPerfCont','pastPerf','pastPerfCont'].some(k=>tset.has(k));
     const needAuxHave = isPerfect && (blanksCount||0) >= 2;
+    if(answer){
+      const hintList=deriveFromAnswer(answer);
+      const hintText = hintList.length? '('+hintList.join('/')+')' : '';
+      if(/\([^)]*\)/.test(str)){
+        return str.replace(/\(([^)]*)\)/g, hintText || '');
+      } else {
+        return hintText? (str.trim()+ ' ' + hintText) : str;
+      }
+    }
     return str.replace(/\(([^)]*)\)/g,(m,inner)=>{
       // split multi-gap hints: watch/ring
       const tokens = inner.split('/').map(t=>t.trim()).filter(Boolean);
@@ -350,7 +411,7 @@
 
   function nextQuestion(){if(state.idx>=state.pool.length){return showResult();}
     const q=state.pool[state.idx]; state.current=q;
-    $('#qText').textContent=sanitizeParenHints(q.q, q.tenses, (q.q.match(/_{2,}/g)||[]).length); const box=$('#choices'); box.innerHTML='';
+    $('#qText').textContent=sanitizeParenHints(q.q, q.tenses, (q.q.match(/_{2,}/g)||[]).length, q.choices[q.a]); const box=$('#choices'); box.innerHTML='';
     if(state.mode==='write'){
       const input=document.createElement('input'); input.type='text'; input.id='writeInput'; input.placeholder='Antwort hier eingeben (groß/klein zählt)';
       input.addEventListener('keydown',(e)=>{
@@ -424,6 +485,7 @@
   </script>
 </body>
 </html>
+
 
 
 
