@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>English Tenses Trainer</title>
+  <title>English Grammar Trainer - Complete</title>
   <style>
     :root{
       --bg:#0f172a;--text:#e5e7eb;--accent:#22d3ee;--accent2:#a78bfa;--good:#34d399;--bad:#f87171;
@@ -26,20 +26,19 @@
     .chip{padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.1);font-size:14px;cursor:pointer}
     .chip.active{border-color:var(--accent);background:rgba(34,211,238,.25)}
     #explain{margin-top:10px;font-size:14px;color:#cbd5e1;text-align:center}
-    .verb-hint{margin-top:10px;padding:8px 12px;background:rgba(34,211,238,.15);border:1px solid var(--accent);border-radius:8px;font-size:14px;text-align:center;color:var(--accent);font-weight:600}
   </style>
 </head>
 <body>
   <div class="app">
     <section class="card" id="startScreen">
-      <h1>English Tenses Trainer</h1>
-      <p style="text-align:center">Wähle Modus und Zeitformen. Fokus auf <b>to use</b> in allen Zeiten + Signalwörtern (usually / used to / have used).</p>
+      <h1>English Grammar Trainer - Complete</h1>
+      <p style="text-align:center">Alle wichtigen englischen Zeitformen mit 120 Aufgaben. Wähle Modus und Kategorien.</p>
 
       <h3>Modus auswählen</h3>
       <div class="chips" id="modeChips"></div>
-      <p style="font-size:12px;text-align:center">Learn = mit Erklärungen · Practice = schneller · Test = Ergebnis am Schluss · Blind = ohne Hinweise · Write = selbst schreiben (streng, inkl. Rechtschreibung)</p>
+      <p style="font-size:12px;text-align:center">Learn = mit Erklärungen · Practice = schneller · Test = Ergebnis am Schluss · Blind = ohne Hinweise · Write = selbst schreiben</p>
 
-      <h3>Zeitformen / Kategorien auswählen</h3>
+      <h3>Kategorien auswählen</h3>
       <div class="chips" id="tenseChips"></div>
 
       <div class="row">
@@ -64,107 +63,178 @@
 
   <script>
   // ——————————————————————————————————————————————
-  // FRAGEN-POOL (to use + Signalwörter) — alle wichtigen Zeitformen
-  // tenses-Tags steuern Filter-Chips auf dem Startscreen
+  // COMPLETE GRAMMAR BANK - 120 Questions
   // ——————————————————————————————————————————————
   const BANK=[
-    // SIGNALWÖRTER (usually / used to / have used)
-    {q:"My sister ___ her phone for homework. (use)",choices:["usually uses","used to use","has used"],a:0,tenses:["signals"],exp:"Gewohnheit jetzt → usually + Present Simple: usually uses."},
-    {q:"When I was young, I ___ my dad's computer. (use)",choices:["used to use","usually use","have used"],a:0,tenses:["signals"],exp:"✓ used to use - When I was young → frühere Gewohnheit (jetzt nicht mehr) | ✗ usually use - falsch: usually für Gegenwart | ✗ have used - falsch: Present Perfect für Erfahrung, nicht Gewohnheit"},
-    {q:"The students ___ this app many times before. (use)",choices:["have used","usually use","used to use"],a:0,tenses:["signals"],exp:"Erfahrung bis jetzt → Present Perfect: have used."},
+    // PRESENT TENSES (Simple & Continuous) - 1-10
+    {q:"I usually _____ coffee at breakfast. (drink)",choices:["drink","drinks","am drinking"],a:0,tenses:["presentSimple"],exp:"✓ drink - I + usually → Present Simple base form | ✗ drinks - falsch: 'I' braucht kein -s | ✗ am drinking - falsch: usually = Gewohnheit, nicht momentan"},
+    {q:"Listen! The neighbours _____ the piano right now. (play)",choices:["are playing","play","plays"],a:0,tenses:["presentCont"],exp:"✓ are playing - Listen! + right now → Present Continuous | ✗ play - falsch: Present Simple nicht für momentane Handlung | ✗ plays - falsch: 3. Person + falsches Tempus"},
+    {q:"She _____ to work by bus every day. (go)",choices:["goes","go","is going"],a:0,tenses:["presentSimple"],exp:"✓ goes - She + every day → Present Simple 3. Person mit -s | ✗ go - falsch: 3. Person braucht -s | ✗ is going - falsch: every day = Gewohnheit, nicht momentan"},
+    {q:"We can't talk; I _____ for my exam at the moment. (study)",choices:["am studying","study","studies"],a:0,tenses:["presentCont"],exp:"✓ am studying - at the moment → Present Continuous | ✗ study - falsch: Present Simple nicht für momentane Handlung | ✗ studies - falsch: 'I' mit 3. Person Form"},
+    {q:"What time _____ the shop _____? (open)",choices:["does / open","do / open","is / opening"],a:0,tenses:["presentSimple"],exp:"✓ does / open - Frage Present Simple: What time does it open? | ✗ do / open - falsch: 'shop' ist 3. Person Singular | ✗ is / opening - falsch: Öffnungszeiten sind Fakten, nicht momentane Handlungen"},
+    {q:"Why _____ you _____? You look upset. (cry)",choices:["are / crying","do / cry","does / cry"],a:0,tenses:["presentCont"],exp:"✓ are / crying - right now situation → Present Continuous | ✗ do / cry - falsch: momentane Handlung, nicht Gewohnheit | ✗ does / cry - falsch: 'you' mit 3. Person Form"},
+    {q:"My dad _____ meat, so we often cook veggie food. (not eat)",choices:["doesn't eat","don't eat","isn't eating"],a:0,tenses:["presentSimple"],exp:"✓ doesn't eat - My dad (3. Person) + Gewohnheit → Present Simple negativ | ✗ don't eat - falsch: 3. Person braucht doesn't | ✗ isn't eating - falsch: allgemeine Tatsache, nicht momentan"},
+    {q:"Be quiet! The baby _____. (sleep)",choices:["is sleeping","sleeps","sleep"],a:0,tenses:["presentCont"],exp:"✓ is sleeping - Be quiet! → momentane Handlung → Present Continuous | ✗ sleeps - falsch: momentane Handlung, nicht Gewohnheit | ✗ sleep - falsch: 3. Person + falsches Tempus"},
+    {q:"How often _____ you _____ your grandparents? (visit)",choices:["do / visit","are / visiting","does / visit"],a:0,tenses:["presentSimple"],exp:"✓ do / visit - How often → Häufigkeit → Present Simple | ✗ are / visiting - falsch: Häufigkeit, nicht momentane Handlung | ✗ does / visit - falsch: 'you' mit 3. Person Form"},
+    {q:"They usually _____ tennis on Saturdays, but today they _____ football. (play/play)",choices:["play / are playing","are playing / play","plays / plays"],a:0,tenses:["mixed"],exp:"✓ play / are playing - usually = Present Simple, today = Present Continuous | ✗ are playing / play - falsch: Zeiten vertauscht | ✗ plays / plays - falsch: 'they' ist Plural"},
 
-    // PRESENT SIMPLE
-    {q:"Tom ___ his phone every morning. (use)",choices:["uses","use","is using"],a:0,tenses:["presentSimple"],exp:"✓ uses - 3. Person Singular + every morning → Present Simple mit -s | ✗ use - falsch: 3. Person braucht -s | ✗ is using - falsch: every morning = Gewohnheit, nicht momentan"},
-    {q:"We always ___ English apps in class. (use)",choices:["use","uses","are using"],a:0,tenses:["presentSimple"],exp:"We + always → Present Simple: use (base form)."},
-    {q:"The teacher never ___ German words in English class. (use)",choices:["uses","use","is using"],a:0,tenses:["presentSimple"],exp:"3. Person + never → Present Simple: uses (-s ending)."},
+    // PAST SIMPLE & PAST CONTINUOUS - 11-20
+    {q:"I _____ the news when my phone _____. (watch/ring)",choices:["was watching / rang","watched / was ringing","watched / rang"],a:0,tenses:["pastCont"],exp:"✓ was watching / rang - Handlung im Verlauf + plötzliches Ereignis | ✗ watched / was ringing - falsch: Zeiten vertauscht | ✗ watched / rang - falsch: beide Past Simple"},
+    {q:"While we _____ home, it suddenly _____ to rain. (walk/start)",choices:["were walking / started","walked / was starting","walked / started"],a:0,tenses:["pastCont"],exp:"✓ were walking / started - While = andauernde Handlung + suddenly = plötzliches Ereignis | ✗ walked / was starting - falsch: Zeiten vertauscht | ✗ walked / started - falsch: beide Past Simple"},
+    {q:"She _____ her keys yesterday. (lose)",choices:["lost","was losing","has lost"],a:0,tenses:["pastSimple"],exp:"✓ lost - yesterday → Past Simple | ✗ was losing - falsch: keine andauernde Handlung | ✗ has lost - falsch: Present Perfect nicht mit yesterday"},
+    {q:"What _____ you _____ when the accident _____? (do/happen)",choices:["were / doing / happened","did / do / was happening","did / do / happened"],a:0,tenses:["pastCont"],exp:"✓ were / doing / happened - Was warst du dabei zu tun? + plötzliches Ereignis | ✗ did / do / was happening - falsch: Zeiten vertauscht | ✗ did / do / happened - falsch: beide Past Simple"},
+    {q:"We _____ dinner when Tom _____. (have/arrive)",choices:["were having / arrived","had / was arriving","had / arrived"],a:0,tenses:["pastCont"],exp:"✓ were having / arrived - andauernde Handlung + plötzliche Unterbrechung | ✗ had / was arriving - falsch: Zeiten vertauscht | ✗ had / arrived - falsch: beide Past Simple"},
+    {q:"He _____ fast, so the police _____ him. (drive/stop)",choices:["was driving / stopped","drove / was stopping","drove / stopped"],a:0,tenses:["pastCont"],exp:"✓ was driving / stopped - er war dabei zu fahren + police stopped = Unterbrechung | ✗ drove / was stopping - falsch: police stop ist plötzlich | ✗ drove / stopped - falsch: beide Past Simple"},
+    {q:"I _____ my leg while I _____ basketball. (break/play)",choices:["broke / was playing","was breaking / played","broke / played"],a:0,tenses:["pastCont"],exp:"✓ broke / was playing - plötzlicher Unfall während andauernder Aktivität | ✗ was breaking / played - falsch: Unfall ist plötzlich | ✗ broke / played - falsch: beide Past Simple"},
+    {q:"They _____ at 7 a.m. and _____ at 9 a.m. (leave/arrive)",choices:["left / arrived","were leaving / were arriving","left / were arriving"],a:0,tenses:["pastSimple"],exp:"✓ left / arrived - zwei aufeinanderfolgende abgeschlossene Handlungen | ✗ were leaving / were arriving - falsch: keine andauernden Handlungen | ✗ left / were arriving - falsch: mixed ohne Grund"},
+    {q:"She _____ the door when I _____. (open/knock)",choices:["opened / knocked","was opening / knocked","opened / was knocking"],a:0,tenses:["pastSimple"],exp:"✓ opened / knocked - zwei aufeinanderfolgende Handlungen | ✗ was opening / knocked - falsch: öffnen ist schnell | ✗ opened / was knocking - falsch: klopfen ist kurz"},
+    {q:"It _____ all night, so the roads _____ dangerous. (rain/be)",choices:["rained / were","was raining / were","rained / was"],a:0,tenses:["pastSimple"],exp:"✓ rained / were - all night = Dauer, aber abgeschlossen + Resultat | ✗ was raining / were - Past Continuous möglich, aber Past Simple häufiger | ✗ rained / was - falsch: roads ist Plural"},
 
-    // PRESENT CONTINUOUS
-    {q:"Look! She ___ her laptop right now. (use)",choices:["is using","uses","has used"],a:0,tenses:["presentCont"],exp:"✓ is using - Look! + right now → Present Continuous | ✗ uses - falsch: Present Simple passt nicht zu right now | ✗ has used - falsch: Present Perfect passt nicht zu momentaner Handlung"},
-    {q:"We ___ the internet at the moment. (use)",choices:["are using","use","have used"],a:0,tenses:["presentCont"],exp:"at the moment → Present Continuous: are using."},
-    {q:"Listen! The students ___ their tablets. (use)",choices:["are using","use","used"],a:0,tenses:["presentCont"],exp:"Listen! → Present Continuous: are using."},
+    // PRESENT PERFECT SIMPLE - 21-30
+    {q:"I _____ already _____ my homework. (finish)",choices:["have / finished","had / finished","am / finishing"],a:0,tenses:["presentPerf"],exp:"✓ have / finished - already → Present Perfect | ✗ had / finished - falsch: Past Perfect braucht Bezug zu Vergangenheit | ✗ am / finishing - falsch: already nicht mit Present Continuous"},
+    {q:"_____ you ever _____ sushi? (try)",choices:["Have / tried","Did / try","Are / trying"],a:0,tenses:["presentPerf"],exp:"✓ Have / tried - ever → Present Perfect (Erfahrung) | ✗ Did / try - falsch: Past Simple nicht für Erfahrung ohne Zeitangabe | ✗ Are / trying - falsch: ever nicht mit Present Continuous"},
+    {q:"We _____ just _____ the new teacher. (meet)",choices:["have / met","had / met","are / meeting"],a:0,tenses:["presentPerf"],exp:"✓ have / met - just → Present Perfect | ✗ had / met - falsch: Past Perfect ohne Bezug | ✗ are / meeting - falsch: just nicht mit Present Continuous"},
+    {q:"She _____ in Berlin _____ 2018. (live)",choices:["has lived / since","lived / since","has been living / since"],a:0,tenses:["presentPerf"],exp:"✓ has lived / since - since 2018 → Present Perfect | ✗ lived / since - falsch: Past Simple nicht mit since | ✗ has been living / since - richtig, aber Simple häufiger bei since"},
+    {q:"They _____ their tickets yet. (not buy)",choices:["haven't bought","didn't buy","aren't buying"],a:0,tenses:["presentPerf"],exp:"✓ haven't bought - yet → Present Perfect negativ | ✗ didn't buy - falsch: Past Simple nicht mit yet | ✗ aren't buying - falsch: yet nicht mit Present Continuous"},
+    {q:"He _____ three goals this season. (score)",choices:["has scored","scored","is scoring"],a:0,tenses:["presentPerf"],exp:"✓ has scored - this season → Present Perfect (Zeitraum bis jetzt) | ✗ scored - falsch: Past Simple nicht für andauernden Zeitraum | ✗ is scoring - falsch: nicht momentane Handlung"},
+    {q:"How long _____ you _____ at this company? (work)",choices:["have / worked","did / work","are / working"],a:0,tenses:["presentPerf"],exp:"✓ have / worked - How long → Present Perfect (Dauer bis jetzt) | ✗ did / work - falsch: Past Simple nicht für Dauer bis jetzt | ✗ are / working - falsch: How long nicht mit Present Continuous"},
+    {q:"I _____ never _____ to Morocco. (be)",choices:["have / been","had / been","am / being"],a:0,tenses:["presentPerf"],exp:"✓ have / been - never → Present Perfect (Erfahrung) | ✗ had / been - falsch: Past Perfect ohne Bezug | ✗ am / being - falsch: never nicht mit Present Continuous"},
+    {q:"The film _____ already _____. Let's go! (start)",choices:["has / started","had / started","is / starting"],a:0,tenses:["presentPerf"],exp:"✓ has / started - already + Let's go! → Present Perfect | ✗ had / started - falsch: Past Perfect ohne Vergangenheitsbezug | ✗ is / starting - falsch: already nicht mit Present Continuous"},
+    {q:"My sister _____ her ankle again. (sprain)",choices:["has sprained","sprained","is spraining"],a:0,tenses:["presentPerf"],exp:"✓ has sprained - again → Present Perfect (wiederholte Erfahrung) | ✗ sprained - Past Simple möglich, aber Present Perfect häufiger bei 'again' | ✗ is spraining - falsch: nicht momentane Handlung"},
 
-    // PRESENT PERFECT SIMPLE
-    {q:"I ___ this program since 2020. (use)",choices:["have used","had used","am using"],a:0,tenses:["presentPerf"],exp:"✓ have used - since 2020 → Present Perfect (Bezug zur Gegenwart) | ✗ had used - falsch: Past Perfect nur bei Vorvergangenheit | ✗ am using - falsch: Present Continuous nicht mit since"},
-    {q:"She ___ her computer for three hours today. (use)",choices:["has used","have used","is using"],a:0,tenses:["presentPerf"],exp:"today + 3. Person → Present Perfect: has used."},
-    {q:"The class ___ this website before. (use)",choices:["has used","have used","used"],a:0,tenses:["presentPerf"],exp:"before → Present Perfect: has used."},
+    // PRESENT PERFECT CONTINUOUS - 31-40
+    {q:"How long _____ you _____ English? (study)",choices:["have / been studying","are / studying","did / study"],a:0,tenses:["presentPerfCont"],exp:"✓ have / been studying - How long → Present Perfect Continuous (Dauer bis jetzt) | ✗ are / studying - falsch: Present Continuous nicht mit How long | ✗ did / study - falsch: Past Simple nicht für Dauer bis jetzt"},
+    {q:"She's tired because she _____ all morning. (clean)",choices:["has been cleaning","is cleaning","cleaned"],a:0,tenses:["presentPerfCont"],exp:"✓ has been cleaning - all morning → Present Perfect Continuous (Resultat sichtbar) | ✗ is cleaning - falsch: nicht nur momentan | ✗ cleaned - falsch: Past Simple zeigt nicht die Verbindung zur Gegenwart"},
+    {q:"We _____ for the bus since 8:30. (wait)",choices:["have been waiting","are waiting","waited"],a:0,tenses:["presentPerfCont"],exp:"✓ have been waiting - since 8:30 → Present Perfect Continuous | ✗ are waiting - falsch: Present Continuous nicht mit since | ✗ waited - falsch: Past Simple nicht mit since"},
+    {q:"It _____ all day; look at the puddles. (rain)",choices:["has been raining","is raining","rained"],a:0,tenses:["presentPerfCont"],exp:"✓ has been raining - all day + look at puddles → Present Perfect Continuous (sichtbares Resultat) | ✗ is raining - falsch: nicht nur momentan | ✗ rained - falsch: Past Simple zeigt nicht Verbindung zur Gegenwart"},
+    {q:"He _____ a lot recently, so he's fitter. (run)",choices:["has been running","is running","ran"],a:0,tenses:["presentPerfCont"],exp:"✓ has been running - recently + so he's fitter → Present Perfect Continuous (Resultat) | ✗ is running - falsch: recently nicht mit Present Continuous | ✗ ran - falsch: Past Simple zeigt nicht die Verbindung"},
+    {q:"I _____ to call you, but you were busy. (try)",choices:["have been trying","am trying","tried"],a:0,tenses:["presentPerfCont"],exp:"✓ have been trying - wiederholte Versuche bis jetzt → Present Perfect Continuous | ✗ am trying - falsch: nicht nur momentan | ✗ tried - Past Simple möglich, aber Continuous zeigt mehr Anstrengung"},
+    {q:"Why are your hands dirty? – I _____ the bike. (fix)",choices:["have been fixing","am fixing","fixed"],a:0,tenses:["presentPerfCont"],exp:"✓ have been fixing - dirty hands = sichtbares Resultat → Present Perfect Continuous | ✗ am fixing - falsch: nicht momentan, sondern Resultat | ✗ fixed - falsch: Past Simple erklärt nicht die schmutzigen Hände jetzt"},
+    {q:"They _____ about moving to Spain for months. (talk)",choices:["have been talking","are talking","talked"],a:0,tenses:["presentPerfCont"],exp:"✓ have been talking - for months → Present Perfect Continuous (Dauer) | ✗ are talking - falsch: Present Continuous nicht mit for months | ✗ talked - falsch: Past Simple nicht für Dauer bis jetzt"},
+    {q:"She _____ well lately. (not sleep)",choices:["hasn't been sleeping","isn't sleeping","didn't sleep"],a:0,tenses:["presentPerfCont"],exp:"✓ hasn't been sleeping - lately → Present Perfect Continuous negativ | ✗ isn't sleeping - falsch: lately nicht mit Present Continuous | ✗ didn't sleep - falsch: Past Simple nicht mit lately"},
+    {q:"We _____ too much money this week. (spend)",choices:["have been spending","are spending","spent"],a:0,tenses:["presentPerfCont"],exp:"✓ have been spending - this week → Present Perfect Continuous (Zeitraum bis jetzt) | ✗ are spending - falsch: this week nicht mit Present Continuous | ✗ spent - Past Simple möglich, aber Continuous betont die Kontinuität"},
 
-    // PRESENT PERFECT CONTINUOUS
-    {q:"They ___ this app for two months now. (use)",choices:["have been using","had been using","are using"],a:0,tenses:["presentPerfCont"],exp:"for + Zeitraum + now → Present Perfect Continuous."},
-    {q:"I ___ my tablet all morning. (use)",choices:["have been using","had been using","am using"],a:0,tenses:["presentPerfCont"],exp:"all morning → Present Perfect Continuous."},
+    // PAST PERFECT (Simple & Continuous) - 41-50
+    {q:"When we arrived, they _____ already _____. (leave)",choices:["had / left","have / left","were / leaving"],a:0,tenses:["pastPerf"],exp:"✓ had / left - When we arrived = Vergangenheit, they left davor → Past Perfect | ✗ have / left - falsch: Present Perfect nicht in Vergangenheitserzählung | ✗ were / leaving - falsch: Past Continuous zeigt nicht 'schon weg'"},
+    {q:"She was nervous because she _____ never _____ alone before. (fly)",choices:["had / flown","has / flown","was / flying"],a:0,tenses:["pastPerf"],exp:"✓ had / flown - before = Vorvergangenheit → Past Perfect | ✗ has / flown - falsch: Present Perfect nicht in Vergangenheitserzählung | ✗ was / flying - falsch: Past Continuous passt nicht zu never before"},
+    {q:"I couldn't open the file; I _____ the password. (forget)",choices:["had forgotten","forgot","was forgetting"],a:0,tenses:["pastPerf"],exp:"✓ had forgotten - couldn't open (Vergangenheit) + forgot davor → Past Perfect | ✗ forgot - Past Simple möglich, aber Past Perfect zeigt Reihenfolge klarer | ✗ was forgetting - falsch: vergessen ist nicht andauernd"},
+    {q:"He _____ for two hours when the coach ended training. (run)",choices:["had been running","was running","ran"],a:0,tenses:["pastPerfCont"],exp:"✓ had been running - for two hours + when coach ended → Past Perfect Continuous | ✗ was running - falsch: zeigt nicht die Dauer von 2 Stunden | ✗ ran - falsch: Past Simple zeigt nicht Dauer + Vorvergangenheit"},
+    {q:"They were wet because it _____ for ages. (rain)",choices:["had been raining","was raining","rained"],a:0,tenses:["pastPerfCont"],exp:"✓ had been raining - were wet (Resultat) + for ages → Past Perfect Continuous | ✗ was raining - falsch: Past Continuous zeigt nicht die lange Dauer davor | ✗ rained - falsch: Past Simple zeigt nicht Dauer"},
+    {q:"The waiter _____ our order twice before the food came. (check)",choices:["had checked","checked","was checking"],a:0,tenses:["pastPerf"],exp:"✓ had checked - twice before the food came → Past Perfect (Vorvergangenheit) | ✗ checked - Past Simple möglich, aber Past Perfect zeigt Reihenfolge | ✗ was checking - falsch: checking ist schnell, nicht andauernd"},
+    {q:"After I _____ my homework, I watched TV. (finish)",choices:["had finished","finished","was finishing"],a:0,tenses:["pastPerf"],exp:"✓ had finished - After = Reihenfolge → Past Perfect | ✗ finished - Past Simple möglich, aber Past Perfect ist korrekter nach 'after' | ✗ was finishing - falsch: finish ist nicht andauernd"},
+    {q:"She _____ not _____ him before that party. (meet)",choices:["had / met","did / meet","was / meeting"],a:0,tenses:["pastPerf"],exp:"✓ had / met - before that party → Past Perfect negativ | ✗ did / meet - falsch: Past Simple negativ nicht mit before | ✗ was / meeting - falsch: meet ist nicht andauernd"},
+    {q:"We were late: the film _____ already _____. (start)",choices:["had / started","has / started","was / starting"],a:0,tenses:["pastPerf"],exp:"✓ had / started - were late (Vergangenheit) + film started davor → Past Perfect | ✗ has / started - falsch: Present Perfect nicht in Vergangenheitserzählung | ✗ was / starting - falsch: start ist schnell"},
+    {q:"He looked tired; he _____ all night. (work)",choices:["had been working","was working","worked"],a:0,tenses:["pastPerfCont"],exp:"✓ had been working - looked tired (Resultat) + all night → Past Perfect Continuous | ✗ was working - falsch: Past Continuous zeigt nicht die komplette Nacht davor | ✗ worked - falsch: Past Simple zeigt nicht die Dauer"},
 
-    // PAST SIMPLE
-    {q:"Yesterday morning I ___ the wrong app. (use)",choices:["used","was using","have used"],a:0,tenses:["pastSimple"],exp:"Yesterday → Past Simple: used."},
-    {q:"Last week we ___ a new program in IT class. (use)",choices:["used","were using","have used"],a:0,tenses:["pastSimple"],exp:"Last week → Past Simple: used."},
-    {q:"Two years ago, students ___ different books. (use)",choices:["used","were using","have used"],a:0,tenses:["pastSimple"],exp:"Two years ago → Past Simple: used."},
+    // FUTURE (will / going to / arrangements) - 51-60
+    {q:"Look at those clouds! It _____ soon. (rain)",choices:["is going to rain","will rain","rains"],a:0,tenses:["futureGoingTo"],exp:"✓ is going to rain - Look at clouds = sichtbare Anzeichen → going to | ✗ will rain - falsch: will für spontane Entscheidungen | ✗ rains - falsch: Present Simple nicht für Zukunft"},
+    {q:"I think I _____ to bed early tonight. (go)",choices:["will go","am going to go","go"],a:0,tenses:["futureWill"],exp:"✓ will go - I think = Meinung/Entscheidung → will | ✗ am going to go - falsch: going to für feste Pläne | ✗ go - falsch: Present Simple nicht für Zukunftspläne"},
+    {q:"We _____ our grandparents on Sunday at 3 p.m. (visit)",choices:["are visiting","will visit","are going to visit"],a:0,tenses:["futureArrangement"],exp:"✓ are visiting - Sunday at 3 p.m. = fester Termin → Present Continuous für arrangements | ✗ will visit - falsch: will für spontane Entscheidungen | ✗ are going to visit - going to möglich, aber Present Continuous häufiger bei festen Terminen"},
+    {q:"Don't worry, I _____ you with the bags. (help)",choices:["will help","am going to help","help"],a:0,tenses:["futureWill"],exp:"✓ will help - Don't worry = spontanes Angebot → will | ✗ am going to help - falsch: going to für geplante Aktionen | ✗ help - falsch: Present Simple nicht für Angebote"},
+    {q:"We've bought the tickets; we _____ to Rome next Friday. (fly)",choices:["are flying","will fly","are going to fly"],a:0,tenses:["futureArrangement"],exp:"✓ are flying - bought tickets + next Friday = fester Plan → Present Continuous | ✗ will fly - falsch: will für spontane Entscheidungen | ✗ are going to fly - going to möglich, aber Present Continuous häufiger bei gebuchten Tickets"},
+    {q:"He's made up his mind: he _____ a new phone. (buy)",choices:["is going to buy","will buy","buys"],a:0,tenses:["futureGoingTo"],exp:"✓ is going to buy - made up his mind = feste Absicht → going to | ✗ will buy - falsch: will für spontane Entscheidungen | ✗ buys - falsch: Present Simple nicht für Zukunftspläne"},
+    {q:"Are you free at six? – Sorry, I _____ my dentist then. (see)",choices:["am seeing","will see","see"],a:0,tenses:["futureArrangement"],exp:"✓ am seeing - dentist at six = fester Termin → Present Continuous | ✗ will see - falsch: will für spontane Entscheidungen | ✗ see - falsch: Present Simple zeigt nicht Zukunft"},
+    {q:"Be careful or you _____ your coffee. (spill)",choices:["will spill","are going to spill","spill"],a:0,tenses:["futureWill"],exp:"✓ will spill - Be careful or = Warnung/Vorhersage → will | ✗ are going to spill - going to möglich, aber will häufiger bei Warnungen | ✗ spill - falsch: Present Simple nicht für Warnungen"},
+    {q:"What time _____ the meeting _____? (start)",choices:["does / start","will / start","is / going to start"],a:0,tenses:["futureSchedule"],exp:"✓ does / start - meeting time = fester Zeitplan → Present Simple | ✗ will / start - falsch: will nicht für feste Zeitpläne | ✗ is / going to start - falsch: going to nicht für Zeitpläne"},
+    {q:"I promise I _____ late again. (not be)",choices:["won't be","am not going to be","am not"],a:0,tenses:["futureWill"],exp:"✓ won't be - I promise = Versprechen → will (negativ) | ✗ am not going to be - falsch: going to nicht für Versprechen | ✗ am not - falsch: Present Simple nicht für Zukunftsversprechen"},
 
-    // PAST CONTINUOUS
-    {q:"At 10 am yesterday, I ___ my computer. (use)",choices:["was using","used","am using"],a:0,tenses:["pastCont"],exp:"Zeitpunkt gestern → Past Continuous: was using."},
-    {q:"While she was studying, her brother ___ the TV. (use)",choices:["was using","used","uses"],a:0,tenses:["pastCont"],exp:"While + Past Continuous → was using."},
-    {q:"During the lesson, we ___ our tablets. (use)",choices:["were using","used","are using"],a:0,tenses:["pastCont"],exp:"During → Past Continuous: were using."},
+    // MODALS - 61-70
+    {q:"When I was a child, I _____ swim very well. (ability past)",choices:["could","can","was able to"],a:0,tenses:["modals"],exp:"✓ could - When I was a child = Vergangenheit → could für frühere Fähigkeit | ✗ can - falsch: can für Gegenwart | ✗ was able to - richtig, aber could häufiger"},
+    {q:"You _____ wear a seat belt in the car. (obligation)",choices:["must","should","can"],a:0,tenses:["modals"],exp:"✓ must - seat belt = gesetzliche Pflicht → must | ✗ should - falsch: should nur Empfehlung | ✗ can - falsch: can für Erlaubnis"},
+    {q:"You _____ see a doctor; that cough sounds bad. (advice)",choices:["should","must","can"],a:0,tenses:["modals"],exp:"✓ should - Ratschlag → should | ✗ must - falsch: must zu stark für Ratschlag | ✗ can - falsch: can für Fähigkeit/Erlaubnis"},
+    {q:"_____ I open the window? (permission)",choices:["May","Can","Must"],a:0,tenses:["modals"],exp:"✓ May - höfliche Bitte um Erlaubnis → May | ✗ Can - Can möglich, aber May höflicher | ✗ Must - falsch: must für Pflicht"},
+    {q:"It _____ rain later; take an umbrella. (possibility)",choices:["might","must","will"],a:0,tenses:["modals"],exp:"✓ might - Möglichkeit (nicht sicher) → might | ✗ must - falsch: must für starke Vermutung | ✗ will - falsch: will für sichere Zukunft"},
+    {q:"Employees _____ arrive before 9 a.m. (external obligation)",choices:["have to","must","should"],a:0,tenses:["modals"],exp:"✓ have to - externe Regel (Firma) → have to | ✗ must - must für persönliche Überzeugung | ✗ should - falsch: should nur Empfehlung"},
+    {q:"He _____ play the guitar, but not the piano. (ability)",choices:["can","could","must"],a:0,tenses:["modals"],exp:"✓ can - Gegenwart + Fähigkeit → can | ✗ could - falsch: could für Vergangenheit | ✗ must - falsch: must für Pflicht"},
+    {q:"You _____ smoke here; it's forbidden. (prohibition)",choices:["must not","don't have to","shouldn't"],a:0,tenses:["modals"],exp:"✓ must not - Verbot → must not | ✗ don't have to - falsch: bedeutet 'nicht nötig' | ✗ shouldn't - falsch: shouldn't nur Empfehlung"},
+    {q:"I _____ finish this tonight, but I'm not sure. (possibility)",choices:["might","must","will"],a:0,tenses:["modals"],exp:"✓ might - but I'm not sure = unsicher → might | ✗ must - falsch: must für starke Vermutung | ✗ will - falsch: will für sichere Zukunft"},
+    {q:"She _____ have taken the wrong train. (deduction)",choices:["may","can","will"],a:0,tenses:["modals"],exp:"✓ may - Vermutung über Vergangenheit → may have + past participle | ✗ can - can have nicht für Vermutungen | ✗ will - falsch: will have für Future Perfect"},
 
-    // PAST PERFECT
-    {q:"Before the test started, I ___ my calculator. (use)",choices:["had used","have used","used"],a:0,tenses:["pastPerf"],exp:"Before + Past → Past Perfect: had used."},
-    {q:"She ___ the app before it became popular. (use)",choices:["had used","has used","used"],a:0,tenses:["pastPerf"],exp:"Vorvergangenheit → Past Perfect: had used."},
+    // USED TO / BE USED TO / WOULD - 71-75  
+    {q:"I _____ play football every day when I was ten. (past habit)",choices:["used to","am used to","would"],a:0,tenses:["usedTo"],exp:"✓ used to - when I was ten = frühere Gewohnheit → used to | ✗ am used to - falsch: be used to = gewöhnt sein | ✗ would - would möglich, aber used to häufiger für Gewohnheiten"},
+    {q:"She _____ living in a big city now. (accustomed)",choices:["is used to","used to","would"],a:0,tenses:["usedTo"],exp:"✓ is used to - now = gewöhnt sein an → be used to | ✗ used to - falsch: used to für Vergangenheit | ✗ would - falsch: would für Vergangenheitsgewohnheiten"},
+    {q:"We _____ to school together back then. (repeated past action)",choices:["would walk","used to walk","are used to walking"],a:0,tenses:["usedTo"],exp:"✓ would walk - back then + repeated action → would | ✗ used to walk - used to möglich, aber would betont Wiederholung | ✗ are used to walking - falsch: be used to für Gewohnheit, nicht Vergangenheit"},
+    {q:"He didn't _____ spicy food, but now he loves it. (negative past habit)",choices:["use to eat","used to eat","used to eating"],a:0,tenses:["usedTo"],exp:"✓ use to eat - didn't + use to (ohne -d) | ✗ used to eat - falsch: nach didn't kein -d | ✗ used to eating - falsch: used to + base form"},
+    {q:"Are you _____ getting up early? (question - accustomed)",choices:["used to","use to","used for"],a:0,tenses:["usedTo"],exp:"✓ used to - Are you used to = Bist du gewöhnt an? → used to | ✗ use to - falsch: nur nach didn't | ✗ used for - falsch: used for = verwendet für"},
 
-    // PAST PERFECT CONTINUOUS
-    {q:"He ___ the program for hours before it crashed. (use)",choices:["had been using","has been using","was using"],a:0,tenses:["pastPerfCont"],exp:"Dauer vor Vergangenheit → Past Perfect Continuous."},
-    {q:"We ___ the wifi for 20 minutes before it stopped working. (use)",choices:["had been using","have been using","were using"],a:0,tenses:["pastPerfCont"],exp:"Zeitdauer + before → Past Perfect Continuous."},
+    // QUESTIONS & NEGATIONS - 76-80
+    {q:"_____ you _____ the letter yet? (present perfect question)",choices:["Have / sent","Did / send","Are / sending"],a:0,tenses:["questions"],exp:"✓ Have / sent - yet → Present Perfect Frage | ✗ Did / send - falsch: Past Simple nicht mit yet | ✗ Are / sending - falsch: Present Continuous nicht mit yet"},
+    {q:"Why _____ she _____ to the meeting yesterday? (past simple negative question)",choices:["didn't / come","doesn't / come","hasn't / come"],a:0,tenses:["questions"],exp:"✓ didn't / come - yesterday + Frage → Past Simple negativ | ✗ doesn't / come - falsch: Present Simple nicht mit yesterday | ✗ hasn't / come - falsch: Present Perfect nicht mit yesterday"},
+    {q:"What _____ you _____ at 8 p.m. last night? (past continuous question)",choices:["were / doing","did / do","are / doing"],a:0,tenses:["questions"],exp:"✓ were / doing - at 8 p.m. last night → Past Continuous Frage | ✗ did / do - falsch: Past Simple nicht für Zeitpunkt | ✗ are / doing - falsch: Present Continuous nicht für Vergangenheit"},
+    {q:"_____ they _____ the report by Friday? (future question)",choices:["Will / have finished","Do / finish","Are / finishing"],a:0,tenses:["questions"],exp:"✓ Will / have finished - by Friday → Future Perfect | ✗ Do / finish - falsch: Present Simple nicht für Zukunft | ✗ Are / finishing - falsch: Present Continuous nicht mit by Friday"},
+    {q:"He _____ in Paris since March, _____ he? (question tag)",choices:["has lived / hasn't","lived / didn't","lives / doesn't"],a:0,tenses:["questions"],exp:"✓ has lived / hasn't - since March → Present Perfect + negative tag | ✗ lived / didn't - falsch: Past Simple nicht mit since | ✗ lives / doesn't - falsch: Present Simple nicht mit since"},
 
-    // WILL-FUTURE
-    {q:"I think I ___ my phone tomorrow. (use)",choices:["will use","am going to use","use"],a:0,tenses:["futureWill"],exp:"✓ will use - I think → spontane Meinung/Vermutung | ✗ am going to use - falsch: going to für feste Pläne | ✗ use - falsch: Present Simple nicht für Zukunft mit tomorrow"},
-    {q:"The weather is bad. We ___ the indoor sports hall. (use)",choices:["will use","are going to use","use"],a:0,tenses:["futureWill"],exp:"spontane Entscheidung → will use."},
-    {q:"Maybe she ___ a different app next time. (use)",choices:["will use","is going to use","uses"],a:0,tenses:["futureWill"],exp:"Maybe → Vermutung → will use."},
+    // CONDITIONALS & WISHES - 81-90
+    {q:"If water _____ at 100°C, it turns to steam. (zero conditional)",choices:["boils","boiled","will boil"],a:0,tenses:["conditionals"],exp:"✓ boils - Zero Conditional = Naturgesetz → Present Simple + Present Simple | ✗ boiled - falsch: Past Simple nicht für Naturgesetze | ✗ will boil - falsch: will nicht in Zero Conditional"},
+    {q:"If I see her, I _____ her the message. (first conditional)",choices:["will tell","tell","would tell"],a:0,tenses:["conditionals"],exp:"✓ will tell - First Conditional: If + Present Simple, will + base | ✗ tell - falsch: Present Simple nicht im Hauptsatz | ✗ would tell - falsch: would für Second Conditional"},
+    {q:"If I _____ more time, I would learn Italian. (second conditional)",choices:["had","have","will have"],a:0,tenses:["conditionals"],exp:"✓ had - Second Conditional: If + Past Simple, would + base | ✗ have - falsch: Present Simple für First Conditional | ✗ will have - falsch: will für First Conditional"},
+    {q:"If they _____ earlier, they wouldn't have missed the bus. (third conditional)",choices:["had left","left","leave"],a:0,tenses:["conditionals"],exp:"✓ had left - Third Conditional: If + Past Perfect, would have + past participle | ✗ left - falsch: Past Simple für Second Conditional | ✗ leave - falsch: Present Simple für First Conditional"},
+    {q:"If you had studied, you _____ the exam. (third conditional)",choices:["would have passed","will pass","would pass"],a:0,tenses:["conditionals"],exp:"✓ would have passed - Third Conditional: would have + past participle | ✗ will pass - falsch: will für First Conditional | ✗ would pass - falsch: would + base für Second Conditional"},
+    {q:"I wish I _____ taller. (wish about present)",choices:["were","am","will be"],a:0,tenses:["conditionals"],exp:"✓ were - wish about present → Past Simple (were für alle Personen) | ✗ am - falsch: Present Simple nicht nach wish | ✗ will be - falsch: will nicht nach wish"},
+    {q:"I wish you _____ so fast when you drive. (wish about present habit)",choices:["didn't drive","don't drive","wouldn't drive"],a:0,tenses:["conditionals"],exp:"✓ didn't drive - wish about habit → Past Simple negativ | ✗ don't drive - falsch: Present Simple nicht nach wish | ✗ wouldn't drive - wouldn't möglich, aber didn't häufiger"},
+    {q:"If it _____ tomorrow, we'll stay home. (first conditional)",choices:["rains","rained","will rain"],a:0,tenses:["conditionals"],exp:"✓ rains - First Conditional: If + Present Simple, will + base | ✗ rained - falsch: Past Simple für Second Conditional | ✗ will rain - falsch: will nicht im If-Satz"},
+    {q:"If I _____ you, I'd apologise. (second conditional)",choices:["were","am","will be"],a:0,tenses:["conditionals"],exp:"✓ were - If I were you = Second Conditional (were für alle Personen) | ✗ am - falsch: Present Simple für First Conditional | ✗ will be - falsch: will für First Conditional"},
+    {q:"If she hadn't lost her phone, she _____ me. (third conditional)",choices:["would have called","will call","would call"],a:0,tenses:["conditionals"],exp:"✓ would have called - Third Conditional: would have + past participle | ✗ will call - falsch: will für First Conditional | ✗ would call - falsch: would + base für Second Conditional"},
 
-    // GOING-TO-FUTURE
-    {q:"Look at those clouds! We ___ our umbrellas today. (use)",choices:["are going to use","will use","use"],a:0,tenses:["futureGoingTo"],exp:"sichtbare Anzeichen → going to + base: are going to use."},
-    {q:"Next week we ___ new computers in the lab. (use)",choices:["are going to use","will use","use"],a:0,tenses:["futureGoingTo"],exp:"✓ are going to use - Next week → fester Plan/Vorhaben | ✗ will use - falsch: will für spontane Entscheidungen | ✗ use - falsch: Present Simple nicht für zukünftige Pläne"},
-    {q:"I ___ this method for my presentation tomorrow. (use)",choices:["am going to use","will use","use"],a:0,tenses:["futureGoingTo"],exp:"fester Plan → going to use."},
+    // PASSIVE VOICE - 91-95
+    {q:"The stadium _____ in 2001. (past simple passive)",choices:["was built","built","has been built"],a:0,tenses:["passiveVoice"],exp:"✓ was built - in 2001 → Past Simple Passive: was/were + past participle | ✗ built - falsch: Active Voice | ✗ has been built - falsch: Present Perfect Passive nicht mit Jahreszahl"},
+    {q:"This song _____ by millions every week. (present simple passive)",choices:["is streamed","streams","has been streamed"],a:0,tenses:["passiveVoice"],exp:"✓ is streamed - every week → Present Simple Passive: is/are + past participle | ✗ streams - falsch: Active Voice | ✗ has been streamed - falsch: Present Perfect Passive nicht mit every week"},
+    {q:"The match _____ because of the storm. (past simple passive)",choices:["was cancelled","cancelled","has been cancelled"],a:0,tenses:["passiveVoice"],exp:"✓ was cancelled - Vergangenheit → Past Simple Passive | ✗ cancelled - falsch: Active Voice braucht Subjekt | ✗ has been cancelled - Present Perfect Passive möglich, aber Past Simple häufiger"},
+    {q:"Dinner _____ now; please sit down. (present continuous passive)",choices:["is being served","is served","has been served"],a:0,tenses:["passiveVoice"],exp:"✓ is being served - now → Present Continuous Passive: is/are being + past participle | ✗ is served - falsch: Present Simple Passive nicht für momentane Handlung | ✗ has been served - falsch: Present Perfect Passive nicht für momentane Handlung"},
+    {q:"The new law _____ next month. (future passive)",choices:["will be introduced","is introduced","has been introduced"],a:0,tenses:["passiveVoice"],exp:"✓ will be introduced - next month → Future Passive: will be + past participle | ✗ is introduced - falsch: Present Simple nicht für Zukunft | ✗ has been introduced - falsch: Present Perfect nicht für Zukunft"},
 
-    // FUTURE CONTINUOUS
-    {q:"At 2 pm tomorrow, students ___ the computers. (use)",choices:["will be using","will use","are using"],a:0,tenses:["futureCont"],exp:"Zeitpunkt in der Zukunft → Future Continuous."},
-    {q:"This time next week, we ___ the new software. (use)",choices:["will be using","will use","are going to use"],a:0,tenses:["futureCont"],exp:"this time next week → Future Continuous."},
+    // REPORTED SPEECH & VERB PATTERNS - 96-100
+    {q:"She _____ to help me with the project. (verb pattern)",choices:["offered","suggested","recommended"],a:0,tenses:["reportedSpeech"],exp:"✓ offered - offer + to infinitive | ✗ suggested - falsch: suggest + -ing or that-clause | ✗ recommended - falsch: recommend + -ing or that-clause"},
+    {q:"He _____ going to the cinema instead. (verb pattern)",choices:["suggested","offered","promised"],a:0,tenses:["reportedSpeech"],exp:"✓ suggested - suggest + -ing form | ✗ offered - falsch: offer + to infinitive | ✗ promised - falsch: promise + to infinitive"},
+    {q:"They _____ to finish on time. (verb pattern)",choices:["plan","suggest","offer"],a:0,tenses:["reportedSpeech"],exp:"✓ plan - plan + to infinitive | ✗ suggest - falsch: suggest + -ing | ✗ offer - offer möglich, aber plan passender zum Kontext"},
+    {q:"I _____ not _____ the password. (verb pattern)",choices:["admit / remembering","admit / to remember","admit / remember"],a:0,tenses:["reportedSpeech"],exp:"✓ admit / remembering - admit + -ing form | ✗ admit / to remember - falsch: admit nicht mit to infinitive | ✗ admit / remember - falsch: admit braucht -ing"},
+    {q:"Please _____ to lock the door before you leave. (verb pattern)",choices:["remember","remind","suggest"],a:0,tenses:["reportedSpeech"],exp:"✓ remember - remember + to infinitive (nicht vergessen zu tun) | ✗ remind - falsch: remind somebody to do | ✗ suggest - falsch: suggest + -ing"},
 
-    // FUTURE PERFECT
-    {q:"By next Friday, I ___ this app for one month. (use)",choices:["will have used","will use","will be using"],a:0,tenses:["futurePerf"],exp:"By + Zeitpunkt → Future Perfect: will have used."},
-    {q:"By the end of the year, students ___ many different programs. (use)",choices:["will have used","will use","will be using"],a:0,tenses:["futurePerf"],exp:"By the end → Future Perfect: will have used."},
-
-    // FUTURE PERFECT CONTINUOUS
-    {q:"By 5 pm today, I ___ my laptop for 8 hours. (use)",choices:["will have been using","will be using","will have used"],a:0,tenses:["futurePerfCont"],exp:"By + Dauer → Future Perfect Continuous."},
-
-    // CONDITIONAL
-    {q:"If I had more money, I ___ a better computer. (use)",choices:["would use","will use","am using"],a:0,tenses:["cond"],exp:"If I had → 2nd Conditional: would use."},
-    {q:"If the internet was faster, we ___ more online tools. (use)",choices:["would use","will use","are using"],a:0,tenses:["cond"],exp:"If + was → 2nd Conditional: would use."},
-
-    // CONDITIONAL CONTINUOUS  
-    {q:"If I were rich, I ___ my phone all day. (use)",choices:["would be using","would use","will be using"],a:0,tenses:["condCont"],exp:"If I were → andauernde Hypothese: would be using."},
-
-    // CONDITIONAL PERFECT
-    {q:"If I had known about this app, I ___ it last year. (use)",choices:["would have used","had used","would use"],a:0,tenses:["condPerf"],exp:"If I had known → 3rd Conditional: would have used."},
-
-    // CONDITIONAL PERFECT CONTINUOUS  
-    {q:"If the wifi hadn't been broken, we ___ it all morning. (use)",choices:["would have been using","would be using","will have been using"],a:0,tenses:["condPerfCont"],exp:"If + hadn't been → dauerhafte irreale Vergangenheit."},
+    // USUALLY & USED TO - 101-120
+    {q:"I _____ coffee at 7 a.m. (drink + usually)",choices:["usually drink","drink usually","am usually drinking"],a:0,tenses:["usuallyUsedTo"],exp:"✓ usually drink - usually vor Hauptverb → Present Simple | ✗ drink usually - falsch: usually nicht am Ende | ✗ am usually drinking - falsch: usually nicht mit Present Continuous"},
+    {q:"She _____ to school by bus. (go + usually)",choices:["usually goes","goes usually","is usually going"],a:0,tenses:["usuallyUsedTo"],exp:"✓ usually goes - usually + 3. Person → Present Simple mit -s | ✗ goes usually - falsch: usually nicht am Ende | ✗ is usually going - falsch: usually nicht mit Present Continuous"},
+    {q:"We _____ our homework after dinner. (do + usually)",choices:["usually do","do usually","are usually doing"],a:0,tenses:["usuallyUsedTo"],exp:"✓ usually do - usually + Plural → Present Simple base form | ✗ do usually - falsch: usually nicht am Ende | ✗ are usually doing - falsch: usually nicht mit Present Continuous"},
+    {q:"He _____ very late on weekends. (sleep + usually)",choices:["usually sleeps","sleeps usually","is usually sleeping"],a:0,tenses:["usuallyUsedTo"],exp:"✓ usually sleeps - usually + 3. Person → sleeps | ✗ sleeps usually - falsch: usually nicht am Ende | ✗ is usually sleeping - falsch: usually nicht mit Present Continuous"},
+    {q:"They _____ coffee after lunch. (have + usually)",choices:["usually have","have usually","are usually having"],a:0,tenses:["usuallyUsedTo"],exp:"✓ usually have - usually + Plural → have | ✗ have usually - falsch: usually nicht am Ende | ✗ are usually having - falsch: usually nicht mit Present Continuous"},
+    {q:"My boss _____ emails in the morning. (check + usually)",choices:["usually checks","checks usually","is usually checking"],a:0,tenses:["usuallyUsedTo"],exp:"✓ usually checks - usually + 3. Person → checks | ✗ checks usually - falsch: usually nicht am Ende | ✗ is usually checking - falsch: usually nicht mit Present Continuous"},
+    {q:"The train _____ on time. (arrive + usually)",choices:["usually arrives","arrives usually","is usually arriving"],a:0,tenses:["usuallyUsedTo"],exp:"✓ usually arrives - usually + 3. Person → arrives | ✗ arrives usually - falsch: usually nicht am Ende | ✗ is usually arriving - falsch: usually nicht mit Present Continuous"},
+    {q:"I _____ music while I cook. (listen + usually)",choices:["usually listen","listen usually","am usually listening"],a:0,tenses:["usuallyUsedTo"],exp:"✓ usually listen - usually + I → listen | ✗ listen usually - falsch: usually nicht am Ende | ✗ am usually listening - falsch: usually nicht mit Present Continuous"},
+    {q:"Tim _____ his bike to work. (ride + usually)",choices:["usually rides","rides usually","is usually riding"],a:0,tenses:["usuallyUsedTo"],exp:"✓ usually rides - usually + 3. Person → rides | ✗ rides usually - falsch: usually nicht am Ende | ✗ is usually riding - falsch: usually nicht mit Present Continuous"},
+    {q:"Our teacher _____ us homework on Fridays. (give + usually)",choices:["usually gives","gives usually","is usually giving"],a:0,tenses:["usuallyUsedTo"],exp:"✓ usually gives - usually + 3. Person → gives | ✗ gives usually - falsch: usually nicht am Ende | ✗ is usually giving - falsch: usually nicht mit Present Continuous"},
+    {q:"When I was a child, I _____ in this park. (play + used to)",choices:["used to play","usually played","was used to playing"],a:0,tenses:["usuallyUsedTo"],exp:"✓ used to play - When I was a child → used to für Vergangenheit | ✗ usually played - usually für Gegenwart, nicht Vergangenheit | ✗ was used to playing - falsch: be used to = gewöhnt sein"},
+    {q:"My grandparents _____ in the countryside. (live + used to)",choices:["used to live","usually lived","were used to living"],a:0,tenses:["usuallyUsedTo"],exp:"✓ used to live - Vergangenheit → used to | ✗ usually lived - usually für Gegenwart | ✗ were used to living - falsch: be used to = gewöhnt sein"},
+    {q:"She _____ meat, but now she's vegan. (eat + didn't use to)",choices:["didn't use to eat","usually didn't eat","wasn't used to eating"],a:0,tenses:["usuallyUsedTo"],exp:"✓ didn't use to eat - didn't + use to (ohne -d) | ✗ usually didn't eat - usually für Gegenwart | ✗ wasn't used to eating - falsch: be used to = gewöhnt sein"},
+    {q:"_____ you _____ video games a lot when you were ten? (play + did ... use to)",choices:["Did / use to play","Do / usually play","Were / used to playing"],a:0,tenses:["usuallyUsedTo"],exp:"✓ Did / use to play - Frage Vergangenheit → Did + use to | ✗ Do / usually play - Do für Gegenwart | ✗ Were / used to playing - falsch: be used to = gewöhnt sein"},
+    {q:"We _____ TV every evening before we had kids. (watch + used to)",choices:["used to watch","usually watched","were used to watching"],a:0,tenses:["usuallyUsedTo"],exp:"✓ used to watch - before we had kids → used to für Vergangenheit | ✗ usually watched - usually für Gegenwart | ✗ were used to watching - falsch: be used to = gewöhnt sein"},
+    {q:"I _____ early mornings; it's easy for me. (get up + be used to)",choices:["am used to getting up","used to get up","usually get up"],a:0,tenses:["usuallyUsedTo"],exp:"✓ am used to getting up - it's easy for me = gewöhnt an → be used to + -ing | ✗ used to get up - falsch: used to für Vergangenheit | ✗ usually get up - usually für Gewohnheiten, nicht Gewöhnung"},
+    {q:"He _____ long emails at work. (write + be used to)",choices:["is used to writing","used to write","usually writes"],a:0,tenses:["usuallyUsedTo"],exp:"✓ is used to writing - gewöhnt an etwas → be used to + -ing | ✗ used to write - falsch: used to für Vergangenheit | ✗ usually writes - usually für Gewohnheiten, nicht Gewöhnung"},
+    {q:"Are you _____ spicy food? (eat + be used to)",choices:["used to eating","use to eat","usually eating"],a:0,tenses:["usuallyUsedTo"],exp:"✓ used to eating - Are you used to = gewöhnt an? → be used to + -ing | ✗ use to eat - falsch: use to nur nach didn't | ✗ usually eating - falsch: usually nicht nach are you"},
+    {q:"She _____ in English at meetings now. (speak + be used to)",choices:["is used to speaking","used to speak","usually speaks"],a:0,tenses:["usuallyUsedTo"],exp:"✓ is used to speaking - now = gewöhnt an → be used to + -ing | ✗ used to speak - falsch: used to für Vergangenheit | ✗ usually speaks - usually für Gewohnheiten, nicht Gewöhnung"},
+    {q:"They _____ on the motorway. (drive + be used to)",choices:["are used to driving","used to drive","usually drive"],a:0,tenses:["usuallyUsedTo"],exp:"✓ are used to driving - gewöhnt an → be used to + -ing | ✗ used to drive - falsch: used to für Vergangenheit | ✗ usually drive - usually für Gewohnheiten, nicht Gewöhnung"},
   ];
 
   // Filter-Gruppen / Chips
   const TENSE_LABELS={
-    signals:"Signalwörter (usually / used to / have used)",
     presentSimple:"Present Simple",
-    presentCont:"Present Continuous",
-    presentPerf:"Present Perfect",
-    presentPerfCont:"Present Perfect Continuous",
+    presentCont:"Present Continuous", 
+    mixed:"Mixed Present",
     pastSimple:"Past Simple",
     pastCont:"Past Continuous",
+    presentPerf:"Present Perfect",
+    presentPerfCont:"Present Perfect Continuous",
     pastPerf:"Past Perfect",
     pastPerfCont:"Past Perfect Continuous",
     futureWill:"Future (will)",
     futureGoingTo:"Future (going to)",
-    futureCont:"Future Continuous",
-    futurePerf:"Future Perfect",
-    futurePerfCont:"Future Perfect Continuous",
-    cond:"Conditional",
-    condCont:"Conditional Continuous",
-    condPerf:"Conditional Perfect",
-    condPerfCont:"Conditional Perfect Continuous"
+    futureArrangement:"Future Arrangements",
+    futureSchedule:"Future Schedule",
+    modals:"Modals",
+    usedTo:"Used to / Be used to / Would",
+    questions:"Questions & Negations",
+    conditionals:"Conditionals & Wishes",
+    passiveVoice:"Passive Voice",
+    reportedSpeech:"Reported Speech & Verb Patterns",
+    usuallyUsedTo:"Usually & Used to"
   };
 
   const MODES=[
@@ -194,14 +264,12 @@
     const q=state.pool[state.idx]; state.current=q;
     $('#qText').textContent=q.q; const box=$('#choices'); box.innerHTML='';
     if(state.mode==='write'){
-      const input=document.createElement('input'); input.type='text'; input.id='writeInput'; input.placeholder='Antwort hier eingeben (groß/klein zählt)'; 
+      const input=document.createElement('input'); input.type='text'; input.id='writeInput'; input.placeholder='Antwort hier eingeben (groß/klein zählt)';
       input.addEventListener('keydown',(e)=>{
         if(e.key==='Enter'){
           if($('#checkBtn').classList.contains('hidden')){
-            // Wenn Check-Button versteckt ist, zur nächsten Frage
             $('#nextBtn').click();
           } else {
-            // Wenn Check-Button sichtbar ist, prüfen
             $('#checkBtn').click();
           }
         }
@@ -210,7 +278,6 @@
       $('#checkBtn').classList.remove('hidden'); $('#nextBtn').classList.add('hidden');
       input.focus();
     } else {
-      // Shuffle choices per question and remember the display order
       const order=shuffle(q.choices.map((_,i)=>i));
       state.choiceOrder=order;
       order.forEach((origIdx,displayIdx)=>{
@@ -241,7 +308,7 @@
 
   // Controls
   $('#startBtn').addEventListener('click',()=>{
-    if(state.selectedTenses.size===0){ alert('Bitte wähle mindestens eine Zeitform/Kategorie'); return; }
+    if(state.selectedTenses.size===0){ alert('Bitte wähle mindestens eine Kategorie'); return; }
     $('#startScreen').classList.add('hidden'); $('#quiz').classList.remove('hidden'); buildPool(); nextQuestion();
   });
 
