@@ -35,8 +35,8 @@
     .ex-list li{margin:4px 0;padding:6px 8px;border-radius:8px}
     .ex-list li.good{border:1px solid rgba(52,211,153,.35);background:rgba(52,211,153,.10)}
     .ex-list li.bad{border:1px solid rgba(248,113,113,.35);background:rgba(248,113,113,.10)}
-    .ex-list li.good::before{content:"✓ ";color:var(--good);font-weight:700}
-    .ex-list li.bad::before{content:"✗ ";color:var(--bad);font-weight:700}
+    \.ex-list li.good::before{content:"✓ ";color:var(--good);font-weight:700}
+    \.ex-list li.bad::before{content:"✗ ";color:var(--bad);font-weight:700}
   </style>
 </head>
 <body>
@@ -276,8 +276,10 @@
         'lost':'lose','paid':'pay','spent':'spend','threw':'throw','thrown':'throw','put':'put','cut':'cut','let':'let','read':'read'
       };
       if(IRR[t]) return IRR[t];
-      // drop adverbs/particles
-      const DROP=new Set(['not','to','just','already','yet','still','usually','often','always','sometimes','never']);
+      // drop adverbs/particles and pronouns/determiners
+      const DROP=new Set(['not','to','just','already','yet','still','usually','often','always','sometimes','never',
+        'he','she','it','we','you','they','i','me','him','her','us','them','one','ones',
+        'this','that','these','those','there','here','who','whom','whose','which','what','where','when','why','how']);
       if(DROP.has(t)) return '';
       // modals stay as-is
       const MODALS=new Set(['will','would','can','could','may','might','must','shall','should']);
@@ -485,6 +487,7 @@
   </script>
 </body>
 </html>
+
 
 
 
