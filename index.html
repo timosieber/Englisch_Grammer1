@@ -349,7 +349,7 @@
 
   function nextQuestion(){if(state.idx>=state.pool.length){return showResult();}
     const q=state.pool[state.idx]; state.current=q;
-    #qText.textContent=sanitizeParenHints(q.q, q.tenses, (q.q.match(/_{2,}/g)||[]).length); const box=$('#choices'); box.innerHTML='';
+    $('#qText').textContent=sanitizeParenHints(q.q, q.tenses, (q.q.match(/_{2,}/g)||[]).length); const box=$('#choices'); box.innerHTML='';
     if(state.mode==='write'){
       const input=document.createElement('input'); input.type='text'; input.id='writeInput'; input.placeholder='Antwort hier eingeben (groß/klein zählt)';
       input.addEventListener('keydown',(e)=>{
@@ -423,5 +423,7 @@
   </script>
 </body>
 </html>
+
+
 
 
