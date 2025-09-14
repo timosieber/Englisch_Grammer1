@@ -296,6 +296,9 @@
       return '(' + cleaned.join('/') + ')';
     });
   }
+  // DOM helpers (restored)
+  const $=s=>document.querySelector(s);
+  const $$=s=>Array.from(document.querySelectorAll(s));
   const state={mode:'learn',selectedTenses:new Set(Object.keys(TENSE_LABELS)),pool:[],idx:0,score:0,locked:false,current:null,choiceOrder:[]};
 
   // Modus-Chips
