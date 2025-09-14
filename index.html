@@ -497,7 +497,7 @@
       };
       if(IRR[t]) return IRR[t];
       // drop adverbs/particles and pronouns/determiners
-      const DROP=new Set(['not','to','just','already','yet','still','often','always','sometimes','never',
+      const DROP=new Set(['to','just','already','yet','still','often','always','sometimes','never',
         'he','she','it','we','you','they','i','me','him','her','us','them','one','ones',
         'this','that','these','those','there','here','who','whom','whose','which','what','where','when','why','how']);
       if(DROP.has(t)) return '';
@@ -530,6 +530,20 @@
         const toks=part.split(/\s+/).filter(Boolean);
         for(let i=0;i<toks.length;i++){
           let tok=toks[i].toLowerCase();
+          // handle contractions with negation: won't, can't, didn't, hasn't, isn't, etc.
+          if(tok==='cannot'){
+            out.push('can','not');
+            continue;
+          }
+          if(/n['’]t$/.test(tok)){
+            let base=tok.replace(/n['’]t$/,'');
+            if(base==='wo') base='will';
+            if(base==='sha') base='shall';
+            const le=lemmaToken(base);
+            if(le) out.push(le);
+            out.push('not');
+            continue;
+          }
           // handle "used to" phrase → use
           if((tok==='used' || tok==='use') && (i+1)<toks.length && toks[i+1].toLowerCase()==='to'){
             out.push('use'); i++; continue;
