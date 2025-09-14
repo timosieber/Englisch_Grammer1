@@ -269,7 +269,8 @@
     return str.replace(/\(([^)]*)\)/g,(m,inner)=>{
       // split multi-gap hints: watch/ring
       const tokens = inner.split('/').map(t=>t.trim()).filter(Boolean);
-      const cleaned = tokens.map(tok => {
+      const cleaned = [];
+      tokens.forEach(tok => {
         // split plus parts, evaluate candidates for base verb(s)
         const plusParts = tok.split('+').map(p=>p.trim()).filter(Boolean);
         const candidates = [];
@@ -284,15 +285,12 @@
           .map(p=>p.replace(/\s+/g,' ').trim())
           .filter(p=>isAllowedAddition(p));
         if (!base) {
-          // fallback: if no base but an allowed adverb plus a verb-like part exists, try to find a verb-like part among candidates
-          base = candidates.find(c=>/^[a-z][a-z\s]*$/i.test(c)) || '';
+          // if nothing usable remains (e.g., "past habit"), skip this token entirely
+          return; // do not push anything for this token
         }
-        if (!base) {
-          // if still nothing, keep original token as last resort
-          return tok;
-        }
-        return additions.length ? (base + ' + ' + additions.join(' + ')) : base;
+        cleaned.push(additions.length ? (base + ' + ' + additions.join(' + ')) : base);
       });
+      if (cleaned.length===0) return '';
       return '(' + cleaned.join('/') + ')';
     });
   }
