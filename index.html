@@ -510,7 +510,10 @@
 
   function nextQuestion(){if(state.idx>=state.pool.length){return showResult();}
     const q=state.pool[state.idx]; state.current=q;
-    $('#qText').textContent=sanitizeParenHints(q.q, q.tenses, (q.q.match(/_{2,}/g)||[]).length, q.choices[q.a]); const box=$('#choices'); box.innerHTML='';
+    // For worksheet1, present the question exactly as authored; otherwise show sanitized hints
+    const showExact = Array.isArray(q.tenses) && q.tenses.includes('worksheet1');
+    $('#qText').textContent = showExact ? q.q : sanitizeParenHints(q.q, q.tenses, (q.q.match(/_{2,}/g)||[]).length, q.choices[q.a]);
+    const box=$('#choices'); box.innerHTML='';
     if(state.mode==='write'){
       const input=document.createElement('input'); input.type='text'; input.id='writeInput'; input.placeholder='Antwort hier eingeben (groß/klein zählt)';
       input.addEventListener('keydown',(e)=>{
