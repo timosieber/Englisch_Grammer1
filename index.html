@@ -244,7 +244,58 @@
     {id:'blind',label:'Blind'},
     {id:'write',label:'Write'}
   ];
-  function sanitizeParenHints(str){return str.replace(/\(([^)]*)\)/g,(m,inner)=>{let base=inner.split('+')[0].trim(); let parts=base.split('/').map(p=>p.trim().replace(/^not\s+/i,'').replace(/\s+/g,' ')).filter(p=>p.length>0); if(parts.length===0){ return m; } return '('+parts.join('/')+')';});}
+  function sanitizeParenHints(str){
+    const allowedAdverbs = [
+      'usually','always','often','sometimes','never','rarely','seldom','hardly ever'
+    ];
+    const isAllowedAddition = (s) => {
+      const norm = s.toLowerCase().replace(/\s+/g,' ').trim();
+      return allowedAdverbs.includes(norm);
+    };
+    const stripGrammar = (s) => {
+      let t = (s||'').replace(/\s+/g,' ').trim();
+      // remove leading markers
+      t = t.replace(/^(?:to|not)\s+/i,'');
+      // remove auxiliaries/modals if they appear alone
+      if (/^(am|is|are|was|were|be|been|being|do|does|did|have|has|had|will|would|should|can|could|may|might|must)$/i.test(t)) return '';
+      // remove used to / use to / be used to
+      if (/\bused?\s+to\b/i.test(t)) return '';
+      // remove going to / be going to
+      if (/\bgoing\s+to\b/i.test(t)) return '';
+      // general cleanup
+      return t.trim();
+    };
+
+    return str.replace(/\(([^)]*)\)/g,(m,inner)=>{
+      // split multi-gap hints: watch/ring
+      const tokens = inner.split('/').map(t=>t.trim()).filter(Boolean);
+      const cleaned = tokens.map(tok => {
+        // split plus parts, evaluate candidates for base verb(s)
+        const plusParts = tok.split('+').map(p=>p.trim()).filter(Boolean);
+        const candidates = [];
+        plusParts.forEach(p => {
+          const c = stripGrammar(p);
+          if (c) candidates.push(c);
+        });
+        // choose first surviving candidate as base
+        let base = candidates.length ? candidates[0] : '';
+        // collect allowed additions (e.g., usually)
+        const additions = plusParts
+          .map(p=>p.replace(/\s+/g,' ').trim())
+          .filter(p=>isAllowedAddition(p));
+        if (!base) {
+          // fallback: if no base but an allowed adverb plus a verb-like part exists, try to find a verb-like part among candidates
+          base = candidates.find(c=>/^[a-z][a-z\s]*$/i.test(c)) || '';
+        }
+        if (!base) {
+          // if still nothing, keep original token as last resort
+          return tok;
+        }
+        return additions.length ? (base + ' + ' + additions.join(' + ')) : base;
+      });
+      return '(' + cleaned.join('/') + ')';
+    });
+  }
   const state={mode:'learn',selectedTenses:new Set(Object.keys(TENSE_LABELS)),pool:[],idx:0,score:0,locked:false,current:null,choiceOrder:[]};
 
   // Modus-Chips
