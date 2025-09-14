@@ -69,22 +69,22 @@
   // ——————————————————————————————————————————————
   const BANK=[
     // SIGNALWÖRTER (usually / used to / have used)
-    {q:"My sister ___ takes the bus to school. (use)",choices:["usually","used to","have used"],a:0,tenses:["signals"],exp:"Gewohnheit jetzt → usually + Present Simple."},
-    {q:"When I was young, I ___ play video games every day. (use)",choices:["used to","usually","have used"],a:0,tenses:["signals"],exp:"Frühere Gewohnheit → used to + base form."},
-    {q:"The students ___ this app many times before. (use)",choices:["have used","usually","used to"],a:0,tenses:["signals"],exp:"Erfahrung bis jetzt → have + past participle."},
+    {q:"My sister ___ her phone for homework. (use)",choices:["usually uses","used to use","has used"],a:0,tenses:["signals"],exp:"Gewohnheit jetzt → usually + Present Simple: usually uses."},
+    {q:"When I was young, I ___ my dad's computer. (use)",choices:["used to use","usually use","have used"],a:0,tenses:["signals"],exp:"✓ used to use - When I was young → frühere Gewohnheit (jetzt nicht mehr) | ✗ usually use - falsch: usually für Gegenwart | ✗ have used - falsch: Present Perfect für Erfahrung, nicht Gewohnheit"},
+    {q:"The students ___ this app many times before. (use)",choices:["have used","usually use","used to use"],a:0,tenses:["signals"],exp:"Erfahrung bis jetzt → Present Perfect: have used."},
 
     // PRESENT SIMPLE
-    {q:"Tom ___ his phone every morning. (use)",choices:["uses","use","is using"],a:0,tenses:["presentSimple"],exp:"3. Person Singular + every morning → uses."},
-    {q:"We always ___ English in class. (use)",choices:["use","uses","are using"],a:0,tenses:["presentSimple"],exp:"We + always → Present Simple: use."},
-    {q:"The teacher never ___ German during English lessons. (use)",choices:["uses","use","is using"],a:0,tenses:["presentSimple"],exp:"3. Person + never → Present Simple: uses."},
+    {q:"Tom ___ his phone every morning. (use)",choices:["uses","use","is using"],a:0,tenses:["presentSimple"],exp:"✓ uses - 3. Person Singular + every morning → Present Simple mit -s | ✗ use - falsch: 3. Person braucht -s | ✗ is using - falsch: every morning = Gewohnheit, nicht momentan"},
+    {q:"We always ___ English apps in class. (use)",choices:["use","uses","are using"],a:0,tenses:["presentSimple"],exp:"We + always → Present Simple: use (base form)."},
+    {q:"The teacher never ___ German words in English class. (use)",choices:["uses","use","is using"],a:0,tenses:["presentSimple"],exp:"3. Person + never → Present Simple: uses (-s ending)."},
 
     // PRESENT CONTINUOUS
-    {q:"Look! She ___ her laptop right now. (use)",choices:["is using","uses","has used"],a:0,tenses:["presentCont"],exp:"Look + right now → Present Continuous: is using."},
+    {q:"Look! She ___ her laptop right now. (use)",choices:["is using","uses","has used"],a:0,tenses:["presentCont"],exp:"✓ is using - Look! + right now → Present Continuous | ✗ uses - falsch: Present Simple passt nicht zu right now | ✗ has used - falsch: Present Perfect passt nicht zu momentaner Handlung"},
     {q:"We ___ the internet at the moment. (use)",choices:["are using","use","have used"],a:0,tenses:["presentCont"],exp:"at the moment → Present Continuous: are using."},
     {q:"Listen! The students ___ their tablets. (use)",choices:["are using","use","used"],a:0,tenses:["presentCont"],exp:"Listen! → Present Continuous: are using."},
 
     // PRESENT PERFECT SIMPLE
-    {q:"I ___ this program since 2020. (use)",choices:["have used","had used","am using"],a:0,tenses:["presentPerf"],exp:"since → Present Perfect: have used."},
+    {q:"I ___ this program since 2020. (use)",choices:["have used","had used","am using"],a:0,tenses:["presentPerf"],exp:"✓ have used - since 2020 → Present Perfect (Bezug zur Gegenwart) | ✗ had used - falsch: Past Perfect nur bei Vorvergangenheit | ✗ am using - falsch: Present Continuous nicht mit since"},
     {q:"She ___ her computer for three hours today. (use)",choices:["has used","have used","is using"],a:0,tenses:["presentPerf"],exp:"today + 3. Person → Present Perfect: has used."},
     {q:"The class ___ this website before. (use)",choices:["has used","have used","used"],a:0,tenses:["presentPerf"],exp:"before → Present Perfect: has used."},
 
@@ -111,13 +111,13 @@
     {q:"We ___ the wifi for 20 minutes before it stopped working. (use)",choices:["had been using","have been using","were using"],a:0,tenses:["pastPerfCont"],exp:"Zeitdauer + before → Past Perfect Continuous."},
 
     // WILL-FUTURE
-    {q:"I think I ___ my phone tomorrow. (use)",choices:["will use","am going to use","use"],a:0,tenses:["futureWill"],exp:"I think → spontane Meinung → will use."},
+    {q:"I think I ___ my phone tomorrow. (use)",choices:["will use","am going to use","use"],a:0,tenses:["futureWill"],exp:"✓ will use - I think → spontane Meinung/Vermutung | ✗ am going to use - falsch: going to für feste Pläne | ✗ use - falsch: Present Simple nicht für Zukunft mit tomorrow"},
     {q:"The weather is bad. We ___ the indoor sports hall. (use)",choices:["will use","are going to use","use"],a:0,tenses:["futureWill"],exp:"spontane Entscheidung → will use."},
     {q:"Maybe she ___ a different app next time. (use)",choices:["will use","is going to use","uses"],a:0,tenses:["futureWill"],exp:"Maybe → Vermutung → will use."},
 
     // GOING-TO-FUTURE
-    {q:"Look at those clouds! It ___ rain. We ___ umbrellas. (use)",choices:["are going to use","will use","use"],a:0,tenses:["futureGoingTo"],exp:"sichtbare Anzeichen → going to + base."},
-    {q:"Next week we ___ new computers in the lab. (use)",choices:["are going to use","will use","use"],a:0,tenses:["futureGoingTo"],exp:"geplant + next week → going to use."},
+    {q:"Look at those clouds! We ___ our umbrellas today. (use)",choices:["are going to use","will use","use"],a:0,tenses:["futureGoingTo"],exp:"sichtbare Anzeichen → going to + base: are going to use."},
+    {q:"Next week we ___ new computers in the lab. (use)",choices:["are going to use","will use","use"],a:0,tenses:["futureGoingTo"],exp:"✓ are going to use - Next week → fester Plan/Vorhaben | ✗ will use - falsch: will für spontane Entscheidungen | ✗ use - falsch: Present Simple nicht für zukünftige Pläne"},
     {q:"I ___ this method for my presentation tomorrow. (use)",choices:["am going to use","will use","use"],a:0,tenses:["futureGoingTo"],exp:"fester Plan → going to use."},
 
     // FUTURE CONTINUOUS
