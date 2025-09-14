@@ -332,13 +332,16 @@
   function expToHtml(exp, answer, isCorrect){
     const fixed=maybeFixMojibake(exp||'');
     const parts=fixed.split('|').map(s=>s.trim()).filter(Boolean);
-    const items=parts.map(s=>{
+    let items=parts.map(s=>{
       let type='';
       if(/^([✓✔V]\s*|(?:correct)\b)/i.test(s)) type='good';
       if(/^([✗✕xX\?]\s*|(?:falsch)\b)/i.test(s)) type= type || 'bad';
       s=s.replace(/^([✓✔✗✕V\?]+)\s*[-:]?\s*/,'');
       return {type:type||'bad', text:s};
     });
+    if(!items.some(it=>it.type==='good') && items.length){
+      items = items.map((it,idx)=>({type: idx===0?'good':'bad', text: it.text}));
+    }
     const header=isCorrect?`Richtig: "${answer}"`:`Richtig wäre: "${answer}"`;
     const lis=items.map(it=>`<li class="${it.type}">${it.text}</li>`).join('');
     const cls=isCorrect?'ok':'err';
