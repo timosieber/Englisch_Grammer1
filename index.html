@@ -256,19 +256,12 @@
     {id:'write',label:'Write'}
   ];
   function sanitizeParenHints(str, tenses, blanksCount){
-    const allowedAdverbs = [
-      'usually','always','often','sometimes','never','rarely','seldom','hardly ever'
-    ];
-    const isAllowedAddition = (s) => {
-      const norm = s.toLowerCase().replace(/\s+/g,' ').trim();
-      return allowedAdverbs.includes(norm);
-    };
     const stripGrammar = (s) => {
       let t = (s||'').replace(/\s+/g,' ').trim();
       // remove leading markers
       t = t.replace(/^(?:to|not)\s+/i,'');
-      // remove auxiliaries/modals if they appear alone
-      if (/^(am|is|are|was|were|be|been|being|do|does|did|have|has|had|will|would|should|can|could|may|might|must)$/i.test(t)) return '';
+      // remove auxiliaries if they appear alone (we will infer needed ones like 'have' separately)
+      if (/^(am|is|are|was|were|be|been|being|do|does|did|have|has|had)$/i.test(t)) return '';
       // remove used to / use to / be used to
       if (/\bused?\s+to\b/i.test(t)) return '';
       // remove going to / be going to
@@ -294,15 +287,11 @@
         });
         // choose first surviving candidate as base
         let base = candidates.length ? candidates[0] : '';
-        // collect allowed additions (e.g., usually)
-        const additions = plusParts
-          .map(p=>p.replace(/\s+/g,' ').trim())
-          .filter(p=>isAllowedAddition(p));
         if (!base) {
           // if nothing usable remains (e.g., "past habit"), skip this token entirely
           return; // do not push anything for this token
         }
-        cleaned.push(additions.length ? (base + ' + ' + additions.join(' + ')) : base);
+        cleaned.push(base);
       });
       // If it's a perfect tense with 2 blanks and only one token present, prepend base auxiliary 'have'
       if (needAuxHave && cleaned.length===1 && cleaned[0].toLowerCase()!=='have'){
